@@ -127,3 +127,5 @@ REST_FRAMEWORK = {
 }
 
 LOGIN_REDIRECT_URL = '/api/posts/'
+
+ALLOWED_HOSTS = ['*']

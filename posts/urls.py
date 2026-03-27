@@ -12,24 +12,22 @@ from .views import (
 )
 
 def test(request):
-    return JsonResponse({"status": "API WORKING", "signup_available": True})
+    return JsonResponse({
+        "status": "API WORKING",
+        "signup_available": True
+    })
 
 urlpatterns = [
-    # Test
-    path('test/', test, name='test'),
+    path('test/', test),
 
-    # Auth
-    path('signup/', signup, name='signup'),
-    path('auth/signup/', SignupAPIView.as_view(), name='auth-signup'),
+    path('signup/', signup),
+    path('auth/signup/', SignupAPIView.as_view()),
 
-    # Posts
-    path('posts/', PostListCreateView.as_view(), name='post-list'),
-    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('posts/', PostListCreateView.as_view()),
+    path('posts/<int:pk>/', PostDetailView.as_view()),
 
-    # Comments
-    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view(), name='post-comments'),
-    path('comments/<int:pk>/', CommentDetailView.as_view(), name='comment-detail'),
+    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view()),
+    path('comments/<int:pk>/', CommentDetailView.as_view()),
 
-    # Votes
-    path('posts/<int:post_id>/vote/', VoteToggleView.as_view(), name='post-vote'),
+    path('posts/<int:post_id>/vote/', VoteToggleView.as_view()),
 ]

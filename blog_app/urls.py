@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from posts.views import home
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.http import JsonResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),

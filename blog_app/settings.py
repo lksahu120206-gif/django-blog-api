@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 from decouple import config
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-#fqq-yl0stghe_pnm&v%kujf5tm006dunxxjp@x+^w608lz*ao')
 
-DEBUG = True  # TEMP: Expose errors for Render fix
+DEBUG = False  # Production ready
 
 ALLOWED_HOSTS = ['*']
 

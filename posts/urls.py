@@ -11,23 +11,26 @@ from .views import (
     SignupAPIView
 )
 
+# ✅ TEST ROUTE
 def test(request):
-    return JsonResponse({
-        "status": "API WORKING",
-        "signup_available": True
-    })
+    return JsonResponse({"status": "API WORKING"})
 
 urlpatterns = [
-    path('test/', test),
+    # 🔥 TEST
+    path('test/', test, name='test'),
 
-    path('signup/', signup),
-    path('auth/signup/', SignupAPIView.as_view()),
+    # 🔥 AUTH
+    path('signup/', signup, name='signup'),
+    path('auth/signup/', SignupAPIView.as_view(), name='auth-signup'),
 
-    path('posts/', PostListCreateView.as_view()),
-    path('posts/<int:pk>/', PostDetailView.as_view()),
+    # POSTS
+    path('posts/', PostListCreateView.as_view(), name='post-list'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
 
-    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view()),
-    path('comments/<int:pk>/', CommentDetailView.as_view()),
+    # COMMENTS
+    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view(), name='post-comments'),
+    path('comments/<int:pk>/', CommentDetailView.as_view(), name='comment-detail'),
 
-    path('posts/<int:post_id>/vote/', VoteToggleView.as_view()),
+    # VOTES
+    path('posts/<int:post_id>/vote/', VoteToggleView.as_view(), name='post-vote'),
 ]

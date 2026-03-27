@@ -1,36 +1,35 @@
 from django.urls import path
-from .api.views import (
-    PostListCreateAPIView, 
-    PostDetailAPIView, 
-    CommentListCreateAPIView, 
-    CommentDetailAPIView, 
-    VoteToggleAPIView,
-    SignupAPIView,
-    ChangePasswordAPIView
+from django.http import JsonResponse
+
+from .views import (
+    PostListCreateView,
+    PostDetailView,
+    CommentListCreateView,
+    CommentDetailView,
+    VoteToggleView,
+    signup,
+    SignupAPIView
 )
-from django.http import HttpResponse
 
 def test(request):
-    return HttpResponse("API WORKING")
-
-from .views import signup
+    return JsonResponse({"status": "API WORKING", "signup_available": True})
 
 urlpatterns = [
+    # Test
+    path('test/', test, name='test'),
+
     # Auth
     path('signup/', signup, name='signup'),
     path('auth/signup/', SignupAPIView.as_view(), name='auth-signup'),
-    path('auth/change-password/', ChangePasswordAPIView.as_view(), name='change-password'),
-    
-    # Posts
-    path('posts/', PostListCreateAPIView.as_view(), name='post-list'),
-    path('posts/<int:pk>/', PostDetailAPIView.as_view(), name='post-detail'),
-    
-    # Comments
-    path('posts/<int:post_id>/comments/', CommentListCreateAPIView.as_view(), name='post-comments'),
-    path('comments/<int:pk>/', CommentDetailAPIView.as_view(), name='comment-detail'),
-    
-    # Votes
-    path('posts/<int:post_id>/vote/', VoteToggleAPIView.as_view(), name='post-vote'),
-    path('test/', test, name='test'),
-]
 
+    # Posts
+    path('posts/', PostListCreateView.as_view(), name='post-list'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+
+    # Comments
+    path('posts/<int:post_id>/comments/', CommentListCreateView.as_view(), name='post-comments'),
+    path('comments/<int:pk>/', CommentDetailView.as_view(), name='comment-detail'),
+
+    # Votes
+    path('posts/<int:post_id>/vote/', VoteToggleView.as_view(), name='post-vote'),
+]

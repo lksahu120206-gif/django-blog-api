@@ -16,7 +16,7 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-#fqq-yl0stghe_pnm&v%k
 
 DEBUG = False  # Production ready
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','django-blog-api-q037.onrender.com']
 
 
 # APPLICATIONS
@@ -34,8 +34,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,6 +72,7 @@ TEMPLATES = [
 import dj_database_url
 
 # DATABASE - Postgres on Render, SQLite local
+# Note: Import works on Render after pip install dj-database-url
 DATABASE_URL = config('DATABASE_URL', default='')
 if DATABASE_URL:
     DATABASES = {
@@ -102,10 +103,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-# STATIC FILES (FIXED)
+# STATIC FILES CONFIGURATION FOR RENDER + WHITENOISE
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# STATICFILES_DIRS = [BASE_DIR / 'static']  # Commented to avoid collectstatic crash if no custom static
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # CORS

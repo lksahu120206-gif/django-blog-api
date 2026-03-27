@@ -1,108 +1,483 @@
 {% extends 'blog_app/base.html' %}
+{% load static %}
 
-{% block title %}Django Blog - Full Stack App{% endblock %}
+{% block title %}DevJournal - Modern Blog Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success-gradient: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #e9ecef;
+  --card-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6c757d;
+  --border-radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: var(--bg-primary);
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.container {
+  max-width: 900px;
+  padding: 2rem 1rem;
+}
+
+/* Navbar */
+.navbar-custom {
+  background: rgba(255,255,255, 0.95);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.navbar-brand {
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Auth Card */
+.auth-card {
+  background: rgba(255,255,255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: var(--card-shadow);
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+}
+
+.auth-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.auth-tabs .nav-link {
+  border: none;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: 12px;
+  margin: 0 0.5rem;
+  transition: var(--transition);
+}
+
+.auth-tabs .nav-link.active {
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.auth-form .form-control {
+  border: 2px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 1.25rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  background: rgba(255,255,255,0.8);
+  transition: var(--transition);
+}
+
+.auth-form .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  background: white;
+  transform: translateY(-1px);
+}
+
+.auth-form .btn {
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: none;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-form .btn-primary {
+  background: var(--primary-gradient);
+}
+
+.auth-form .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+.auth-form .btn-success {
+  background: var(--success-gradient);
+}
+
+.auth-form .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+}
+
+/* Messages */
+.message {
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  animation: slideIn 0.4s ease-out;
+}
+
+.message.success {
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.message.error {
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+  color: #721c24;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* User Status */
+.user-status {
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+  border-radius: var(--border-radius);
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.change-password {
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Post Cards */
+.post-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: none;
+  overflow: hidden;
+  transition: var(--transition);
+  margin-bottom: 2rem;
+}
+
+.post-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.post-header {
+  background: var(--primary-gradient);
+  color: white;
+  padding: 1.5rem 2rem;
+}
+
+.post-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.post-meta {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.post-content {
+  padding: 2rem;
+  line-height: 1.7;
+}
+
+.post-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  background: #fafbfc;
+}
+
+/* Create Post Form */
+.create-post-form {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.create-post-form .form-control {
+  border-radius: 12px;
+  border: 2px solid rgba(0,0,0,0.1);
+  padding: 1.25rem;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.create-post-form textarea {
+  min-height: 150px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* Buttons */
+.btn-modern {
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border: none;
+  transition: var(--transition);
+}
+
+.btn-primary-modern {
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.btn-success-modern {
+  background: var(--success-gradient);
+  color: white;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.empty-state i {
+  font-size: 4rem;
+  opacity: 0.5;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .post-header, .post-content, .post-footer {
+    padding: 1.5rem 1rem;
+  }
+  
+  .auth-card .card-body {
+    padding: 2rem 1.5rem !important;
+  }
+  
+  .create-post-form {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.slide-in-left {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.loading-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.spinner-large {
+  width: 3rem;
+  height: 3rem;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-      <!-- Auth Status -->
-      <div id="auth-status" class="alert alert-info d-none" role="alert"></div>
-      
-      <!-- Signup Modal -->
-      <div class="modal fade" id="signupModal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Sign Up</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-              <form id="signupForm">
-                <div class="mb-3">
-                  <input type="text" class="form-control" id="signupUsername" placeholder="Username" required>
-                </div>
-                <div class="mb-3">
-                  <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
-                </div>
-                <div class="mb-3">
-                  <input type="password" class="form-control" id="signupPassword" placeholder="Password" required minlength="8">
-                </div>
-                <div class="mb-3">
-                  <input type="password" class="form-control" id="signupPassword2" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner-border spinner-large text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 
-      <!-- Login Modal -->
-      <div class="modal fade" id="loginModal" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Login</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
+<div class="main-container fade-in-up">
+  <!-- Top Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">DevJournal</a>
+      <div class="navbar-nav ms-auto" id="navbarUser">
+        <!-- Dynamic user/auth links -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Auth Card (Hidden when logged in) -->
+    <div id="authSection" class="auth-section">
+      <div class="auth-card">
+        <div class="auth-card-inner">
+          <!-- Tabs -->
+          <div class="auth-tabs">
+            <button class="tab-btn active" data-tab="login">Sign In</button>
+            <button class="tab-btn" data-tab="signup">Sign Up</button>
+          </div>
+
+          <!-- Forms -->
+          <div class="auth-forms">
+            <!-- Login Form -->
+            <div id="loginFormContainer" class="form-container active">
+              <div id="loginMessage" class="message"></div>
               <form id="loginForm">
-                <div class="mb-3">
-                  <input type="text" class="form-control" id="loginUsername" placeholder="Username" required>
+                <div class="form-group">
+                  <input type="text" id="loginUsername" placeholder="Username" required class="form-input">
                 </div>
-                <div class="mb-3">
-                  <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                <div class="form-group">
+                  <input type="password" id="loginPassword" placeholder="Password" required class="form-input">
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <a href="/reset-password/" class="forgot-password">Forgot Password?</a>
+                <button type="submit" class="btn btn-primary-modern w-100">Continue with Password</button>
+              </form>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupFormContainer" class="form-container">
+              <div id="signupMessage" class="message"></div>
+              <form id="signupForm">
+                <div class="form-group">
+                  <input type="text" id="signupUsername" placeholder="Username" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <input type="email" id="signupEmail" placeholder="Email" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <input type="password" id="signupPassword" placeholder="Password (min 8 chars)" required minlength="8" class="form-input">
+                </div>
+                <div class="form-group">
+                  <input type="password" id="signupPasswordConfirm" placeholder="Confirm Password" required class="form-input">
+                </div>
+                <button type="submit" class="btn btn-success-modern w-100">Create Account</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard (Shown when logged in) -->
+    <div id="dashboardSection" class="dashboard-section d-none">
+      <div class="user-welcome">
+        <h2 class="welcome-title slide-in-left">
+          Welcome back, <span id="currentUser"></span>!
+        </h2>
+        <div class="user-actions">
+          <button id="changePasswordBtn" class="btn btn-outline-primary">Change Password</button>
+          <button id="logoutBtn" class="btn btn-secondary">Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Change Password Modal -->
+      <div id="changePasswordModal" class="modal fade">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header border-0">
+              <h5 class="modal-title">Change Password</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div id="changePasswordMessage" class="message mb-3 d-none"></div>
+              <form id="changePasswordForm">
+                <div class="form-group">
+                  <input type="password" id="currentPassword" placeholder="Current Password" required class="form-input">
+                </div>
+                <div class="form-group">
+                  <input type="password" id="newPassword" placeholder="New Password" required minlength="8" class="form-input">
+                </div>
+                <button type="submit" class="btn btn-primary-modern w-100">Update Password</button>
               </form>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Navbar Update -->
-      <div class="mb-4">
-        <h1 class="display-5">Blog Platform</h1>
-        <div class="d-flex gap-2">
-          <button class="btn btn-success" onclick="showSignupModal()">Sign Up</button>
-          <button class="btn btn-primary" onclick="showLoginModal()">Login</button>
-          <button class="btn btn-secondary d-none" id="logoutBtn" onclick="logout()">Logout</button>
-          <span class="badge bg-success fs-6 align-self-center d-none" id="userBadge"></span>
-        </div>
-      </div>
-
-      <!-- Create Post (Logged in only) -->
-      <div id="createPostSection" class="card mb-4 d-none">
+      <!-- Create Post Card -->
+      <div class="create-post-card">
         <div class="card-header">
-          <h5>Create Post</h5>
+          <h3 class="card-title">What's on your mind?</h3>
         </div>
-        <div class="card-body">
-          <form id="postForm">
-            <div class="mb-3">
-              <input type="text" class="form-control" id="postTitle" placeholder="Post Title" required>
-            </div>
-            <div class="mb-3">
-              <textarea class="form-control" id="postContent" rows="3" placeholder="Write your post..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Publish</button>
-          </form>
-        </div>
+        <form id="createPostForm">
+          <div class="form-group">
+            <input type="text" id="postTitle" placeholder="Post title..." required class="form-input">
+          </div>
+          <div class="form-group">
+            <textarea id="postContent" placeholder="Write your thoughts here..." required rows="5" class="form-textarea"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary-modern w-100">Publish Post</button>
+        </form>
       </div>
+    </div>
 
-      <!-- Load Posts -->
-      <div class="text-center mb-4">
-        <button id="loadPostsBtn" class="btn btn-primary btn-lg" onclick="loadPosts()">
-          <i class="fas fa-sync-alt me-2"></i>Load Posts
-        </button>
+    <!-- Posts Feed -->
+    <div id="postsFeed" class="posts-feed">
+      <div class="section-header">
+        <h2 class="section-title">Recent Posts</h2>
+        <button id="loadMoreBtn" class="btn btn-outline-primary">Load More</button>
       </div>
-
-      <!-- Posts Feed -->
       <div id="postsContainer"></div>
-      <div id="noPosts" class="text-center py-5 d-none">
-        <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
-        <h4>No posts found</h4>
-        <p class="text-muted">Create the first post or login to see content!</p>
+      <div id="emptyState" class="empty-state d-none">
+        <i class="fas fa-feather-alt fa-5x mb-4"></i>
+        <h3>No posts yet</h3>
+        <p>Be the first to share your thoughts!</p>
       </div>
     </div>
   </div>
@@ -111,290 +486,405 @@
 
 {% block extra_js %}
 <script>
-let token = localStorage.getItem('token') || '';
-let user = localStorage.getItem('user') || '';
-
-const API_BASE = '/api';
-
-function showMessage(type, message) {
-  const status = document.getElementById('auth-status');
-  status.className = `alert alert-${type} alert-dismissible fade show`;
-  status.textContent = message;
-  status.style.display = 'block';
-  setTimeout(() => status.style.display = 'none', 5000);
-}
-
-function updateAuthUI() {
-  const logoutBtn = document.getElementById('logoutBtn');
-  const userBadge = document.getElementById('userBadge');
-  const createSection = document.getElementById('createPostSection');
-  
-  if (token && user) {
-    logoutBtn.classList.remove('d-none');
-    userBadge.textContent = user;
-    userBadge.classList.remove('d-none');
-    createSection.classList.remove('d-none');
-  } else {
-    logoutBtn.classList.add('d-none');
-    userBadge.classList.add('d-none');
-    createSection.classList.add('d-none');
+class DevJournalApp {
+  constructor() {
+    this.token = localStorage.getItem('token') || '';
+    this.user = localStorage.getItem('user') || '';
+    this.currentPage = 1;
+    this.isLoading = false;
+    
+    this.init();
   }
-}
 
-function showSignupModal() {
-  new bootstrap.Modal(document.getElementById('signupModal')).show();
-}
+  init() {
+    this.bindEvents();
+    this.updateUI();
+    this.loadInitialPosts();
+  }
 
-function showLoginModal() {
-  new bootstrap.Modal(document.getElementById('loginModal')).show();
-}
-
-function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  token = '';
-  user = '';
-  updateAuthUI();
-  loadPosts();
-  showMessage('info', 'Logged out successfully');
-}
-
-// Login
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Logging in...';
-
-  try {
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    const res = await fetch(`${API_BASE}/token/`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({username, password})
+  bindEvents() {
+    // Auth forms
+    document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
+    document.getElementById('signupForm').addEventListener('submit', (e) => this.handleSignup(e));
+    document.getElementById('changePasswordForm').addEventListener('submit', (e) => this.handleChangePassword(e));
+    document.getElementById('createPostForm').addEventListener('submit', (e) => this.handleCreatePost(e));
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => this.switchTab(e));
     });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      token = data.access;
-      user = username;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', user);
-      updateAuthUI();
-      bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-      showMessage('success', 'Login successful!');
-    } else {
-      showMessage('danger', data.detail || 'Login failed');
-    }
-  } catch (err) {
-    showMessage('danger', 'Network error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Login';
-  }
-});
-
-// Signup
-document.getElementById('signupForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const password1 = document.getElementById('signupPassword').value;
-  const password2 = document.getElementById('signupPassword2').value;
-  
-  if (password1 !== password2) {
-    showMessage('warning', 'Passwords do not match');
-    return;
-  }
-
-  const btn = e.target.querySelector('button');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Signing up...';
-
-  try {
-    const data = {
-      username: document.getElementById('signupUsername').value,
-      email: document.getElementById('signupEmail').value,
-      password: password1,
-      password2: password2
-    };
-
-    const res = await fetch(`${API_BASE}/signup/`, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
+    
+    // Auth actions
+    document.getElementById('changePasswordBtn')?.addEventListener('click', () => {
+      new bootstrap.Modal(document.getElementById('changePasswordModal')).show();
     });
-
-    const response = await res.json();
-
-    if (res.ok) {
-      showMessage('success', 'Signup successful! Please login.');
-      bootstrap.Modal.getInstance(document.getElementById('signupModal')).hide();
-      document.getElementById('signupForm').reset();
-    } else {
-      const errors = Object.values(response).flat();
-      showMessage('danger', errors.join(', '));
-    }
-  } catch (err) {
-    showMessage('danger', 'Signup failed');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Sign Up';
-  }
-});
-
-// Create Post
-document.getElementById('postForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Publishing...';
-
-  try {
-    const data = {
-      title: document.getElementById('postTitle').value,
-      content: document.getElementById('postContent').value
-    };
-
-    const res = await fetch(`${API_BASE}/posts/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
+    document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
+    
+    // Load more
+    document.getElementById('loadMoreBtn')?.addEventListener('click', () => this.loadMorePosts());
+    
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => this.switchTab(e));
     });
-
-    if (res.ok) {
-      e.target.reset();
-      loadPosts();
-      showMessage('success', 'Post created successfully!');
-    } else {
-      const err = await res.json();
-      showMessage('danger', err.detail || 'Failed to create post');
-    }
-  } catch (err) {
-    showMessage('danger', 'Network error');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = 'Publish';
   }
-});
 
-async function loadComments(postId) {
-  const res = await fetch(`${API_BASE}/posts/${postId}/comments/`, {
-    headers: token ? {'Authorization': `Bearer ${token}`} : {}
-  });
-  return res.ok ? await res.json() : [];
-}
-
-async function addComment(postId, content) {
-  const res = await fetch(`${API_BASE}/posts/${postId}/comments/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({content})
-  });
-  return res.ok;
-}
-
-async function toggleVote(postId, voteType) {
-  const res = await fetch(`${API_BASE}/posts/${postId}/vote/?vote_type=${voteType}`, {
-    method: 'POST',
-    headers: {'Authorization': `Bearer ${token}`}
-  });
-  return res.ok;
-}
-
-async function loadPosts() {
-  const btn = document.getElementById('loadPostsBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
-
-  try {
-    const headers = token ? {'Authorization': `Bearer ${token}`} : {};
-    const res = await fetch(`${API_BASE}/posts/`, {headers});
-    const posts = await res.json();
-
-    const container = document.getElementById('postsContainer');
-    const noPostsEl = document.getElementById('noPosts');
-
-    if (!posts || posts.length === 0) {
-      container.innerHTML = '';
-      noPostsEl.classList.remove('d-none');
-      return;
-    }
-
-    noPostsEl.classList.add('d-none');
-
-    container.innerHTML = posts.map(post => {
-      return `
-        <div class="card mb-4 post-card">
-          <div class="card-header d-flex justify-content-between">
-            <h5 class="card-title mb-0">${post.title}</h5>
-            <small class="text-muted">${new Date(post.created_at).toLocaleString()}</small>
-          </div>
-          <div class="card-body">
-            <p class="card-text">${post.content}</p>
-            <small class="text-muted">By ${post.author?.username || 'Anonymous'}</small>
-          </div>
-          <div class="card-footer">
-            <div class="row g-2">
-              <div class="col-auto">
-                <button class="btn btn-success btn-sm like-btn" onclick="toggleVote(${post.id}, 'like')">
-                  👍 <span class="likes-count">${post.likes_count || 0}</span>
-                </button>
-              </div>
-              <div class="col-auto">
-                <button class="btn btn-danger btn-sm dislike-btn" onclick="toggleVote(${post.id}, 'dislike')">
-                  👎 <span class="dislikes-count">${post.dislikes_count || 0}</span>
-                </button>
-              </div>
-              <div class="col">
-                <div class="comment-section">
-                  <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" placeholder="Add comment..." id="comment-${post.id}">
-                    <button class="btn btn-outline-secondary" onclick="addComment(${post.id}, document.getElementById('comment-${post.id}').value)">
-                      Post
-                    </button>
-                  </div>
-                  <div class="comments-list mt-2" id="comments-${post.id}">
-                    <!-- Comments loaded here -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  updateUI() {
+    const isAuthenticated = !!this.token && !!this.user;
+    
+    document.getElementById('authSection').classList.toggle('d-none', isAuthenticated);
+    document.getElementById('dashboardSection').classList.toggle('d-none', !isAuthenticated);
+    
+    const navbarUser = document.getElementById('navbarUser');
+    if (isAuthenticated) {
+      navbarUser.innerHTML = `
+        <span class="navbar-text me-3">Hi, ${this.user}</span>
+        <button class="btn btn-sm btn-outline-primary me-2" onclick="app.showChangePassword()">Password</button>
+        <button class="btn btn-sm btn-secondary" onclick="app.logout()">Sign Out</button>
       `;
-    }).join('');
+      document.getElementById('currentUser').textContent = this.user;
+    } else {
+      navbarUser.innerHTML = `
+        <button class="btn btn-sm btn-outline-primary me-2" onclick="app.switchTab({target: {dataset: {tab: 'login'}}})">Sign In</button>
+        <button class="btn btn-sm btn-primary" onclick="app.switchTab({target: {dataset: {tab: 'signup'}}})">Sign Up</button>
+      `;
+    }
+  }
 
-    // Load comments for each post
-    posts.forEach(async (post) => {
-      const comments = await loadComments(post.id);
-      const commentsEl = document.getElementById(`comments-${post.id}`);
-      commentsEl.innerHTML = comments.map(c => `
-        <div class="comment-item small bg-light p-2 rounded mt-1">
-          <strong>${c.author?.username || 'Anon'}</strong>: ${c.content}
-        </div>
-      `).join('');
+  async showLoading(show = true) {
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.classList.toggle('show', show);
+  }
+
+  showMessage(containerId, type, message) {
+    const container = document.getElementById(containerId);
+    container.className = `message ${type}`;
+    container.textContent = message;
+    container.classList.remove('d-none');
+    
+    setTimeout(() => {
+      container.classList.add('d-none');
+    }, 5000);
+  }
+
+  switchTab(e) {
+    e.preventDefault();
+    
+    // Update active tab
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+    
+    e.target.classList.add('active');
+    document.getElementById(e.target.dataset.tab + 'FormContainer').classList.add('active');
+  }
+
+  async handleLogin(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.textContent;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading...';
+    
+    try {
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const response = await fetch('/api/token/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password})
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        this.token = data.access;
+        this.user = username;
+        localStorage.setItem('token', this.token);
+        localStorage.setItem('user', this.user);
+        
+        this.updateUI();
+        this.showMessage('loginMessage', 'success', 'Welcome back!');
+        e.target.reset();
+      } else {
+        this.showMessage('loginMessage', 'error', data.detail || 'Invalid credentials');
+      }
+    } catch (error) {
+      this.showMessage('loginMessage', 'error', 'Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  async handleSignup(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.textContent;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating...';
+    
+    try {
+      const formData = {
+        username: document.getElementById('signupUsername').value,
+        email: document.getElementById('signupEmail').value,
+        password: document.getElementById('signupPassword').value,
+        password2: document.getElementById('signupPasswordConfirm').value
+      };
+      
+      if (formData.password !== formData.password2) {
+        this.showMessage('signupMessage', 'error', 'Passwords do not match');
+        return;
+      }
+      
+      const response = await fetch('/api/signup/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        this.showMessage('signupMessage', 'success', 'Account created! Please sign in.');
+        e.target.reset();
+        this.switchTab({target: {dataset: {tab: 'login'}}});
+      } else {
+        const errors = Object.values(data).flat().join(', ');
+        this.showMessage('signupMessage', 'error', errors);
+      }
+    } catch (error) {
+      this.showMessage('signupMessage', 'error', 'Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  async handleChangePassword(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.textContent;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Updating...';
+    
+    try {
+      const formData = {
+        old_password: document.getElementById('currentPassword').value,
+        new_password: document.getElementById('newPassword').value
+      };
+      
+      const response = await fetch('/api/change-password/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        this.showMessage('changePasswordMessage', 'success', 'Password updated successfully!');
+        e.target.reset();
+        bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+      } else {
+        this.showMessage('changePasswordMessage', 'error', data.detail || 'Update failed');
+      }
+    } catch (error) {
+      this.showMessage('changePasswordMessage', 'error', 'Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  async handleCreatePost(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.textContent;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publishing...';
+    
+    try {
+      const formData = {
+        title: document.getElementById('postTitle').value,
+        content: document.getElementById('postContent').value
+      };
+      
+      const response = await fetch('/api/posts/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        e.target.reset();
+        this.loadInitialPosts();
+        // Show success with custom message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'message success slide-in-left';
+        successMsg.textContent = 'Post published successfully!';
+        document.querySelector('.create-post-card').prepend(successMsg);
+        setTimeout(() => successMsg.remove(), 4000);
+      } else {
+        const error = await response.json();
+        alert('Failed to create post: ' + (error.detail || 'Unknown error'));
+      }
+    } catch (error) {
+      alert('Network error. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  async loadInitialPosts() {
+    await this.loadPosts(1);
+  }
+
+  async loadMorePosts() {
+    this.currentPage++;
+    await this.loadPosts(this.currentPage, true);
+  }
+
+  async loadPosts(page = 1, append = false) {
+    if (this.isLoading) return;
+    
+    this.isLoading = true;
+    this.showLoading(true);
+    
+    try {
+      const headers = {
+        'Authorization': `Bearer ${this.token}`
+      };
+      
+      const response = await fetch(`/api/posts/?page=${page}`, {
+        headers
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        this.renderPosts(data.results || data, append);
+        document.getElementById('emptyState').classList.toggle('d-none', data.results && data.results.length > 0);
+      } else {
+        console.error('Failed to load posts');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    } finally {
+      this.isLoading = false;
+      this.showLoading(false);
+    }
+  }
+
+  renderPosts(posts, append = false) {
+    const container = document.getElementById('postsContainer');
+    
+    if (!append) {
+      container.innerHTML = '';
+    }
+    
+    posts.forEach(post => {
+      const postElement = this.createPostElement(post);
+      container.appendChild(postElement);
     });
+  }
 
-  } catch (err) {
-    showMessage('danger', 'Failed to load posts');
-    document.getElementById('postsContainer').innerHTML = '<div class="alert alert-warning">Error loading posts</div>';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-sync-alt me-2"></i>Load Posts';
+  createPostElement(post) {
+    const div = document.createElement('div');
+    div.className = 'post-card fade-in-up';
+    div.innerHTML = `
+      <div class="post-header">
+        <div class="post-title">${post.title}</div>
+        <div class="post-meta">
+          By ${post.author?.username || 'Anonymous'} • 
+          <time datetime="${post.created_at}">${new Date(post.created_at).toLocaleDateString()}</time>
+        </div>
+      </div>
+      <div class="post-content">
+        <p>${post.content}</p>
+      </div>
+      <div class="post-footer">
+        <div class="post-actions">
+          <button class="btn-modern btn-primary-modern like-btn" onclick="app.toggleVote(${post.id}, 'like')">
+            <i class="fas fa-thumbs-up me-1"></i> ${post.likes_count || 0}
+          </button>
+          <button class="btn-modern btn-primary-modern dislike-btn" onclick="app.toggleVote(${post.id}, 'dislike')">
+            <i class="fas fa-thumbs-down me-1"></i> ${post.dislikes_count || 0}
+          </button>
+          <div class="comment-section">
+            <input type="text" class="form-control form-control-sm comment-input" placeholder="Add a comment..." id="comment-${post.id}">
+            <button class="btn btn-outline-secondary btn-sm mt-2" onclick="app.addComment(${post.id})">Post Comment</button>
+            <div id="comments-${post.id}" class="comments-list mt-3"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    return div;
+  }
+
+  async toggleVote(postId, voteType) {
+    try {
+      const response = await fetch(`/api/posts/${postId}/vote/?vote_type=${voteType}`, {
+        method: 'POST',
+        headers: {'Authorization': `Bearer ${this.token}`}
+      });
+      
+      if (response.ok) {
+        this.loadInitialPosts();
+      }
+    } catch (error) {
+      console.error('Vote failed:', error);
+    }
+  }
+
+  async addComment(postId) {
+    const input = document.getElementById(`comment-${postId}`);
+    const content = input.value.trim();
+    
+    if (!content) return;
+    
+    try {
+      const response = await fetch(`/api/posts/${postId}/comments/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: JSON.stringify({content})
+      });
+      
+      if (response.ok) {
+        input.value = '';
+        this.loadInitialPosts();
+      }
+    } catch (error) {
+      console.error('Comment failed:', error);
+    }
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.token = '';
+    this.user = '';
+    this.updateUI();
+    this.loadInitialPosts();
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateAuthUI();
-  loadPosts();
-});
+// Initialize app
+const app = new DevJournalApp();
 </script>
 {% endblock %}

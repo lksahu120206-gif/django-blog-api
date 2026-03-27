@@ -1,1 +1,4 @@
-# Django Homepage Render Fix - COMPLETE ✅\n\n**All steps done:**\n- [x] 1. DEBUG=True temp ✓\n- [x] 2. build.sh good ✓\n- [x] 3. Local / frontend/API work ✓ (http://127.0.0.1:8000/)\n- [x] 4. Deployed (latest commit e0b3370)\n- [x] 5. Render redeploy triggered - test your site\n- [x] 6. DEBUG=False prod ready ✓\n- [x] 7. git clean ✓ Repo clean\n- [x] 8. Final push ✓\n\n**Clean repo! Delete this file if desired.**
+# Frontend Homepage Redesign Tasks
+
+- [x] Create TODO.md\n- [x] Add hero section to Home.jsx\n- [x] Add error state\n- [x] Add empty state\n- [x] Implement grid layout for posts\n- [x] Test loading states\n- [x] Update UI with Tailwind
+

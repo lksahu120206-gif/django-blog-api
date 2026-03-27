@@ -1,27 +1,90 @@
+/* Post Cards */
 .post-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-.post-title {
-  color: #333;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
-.post-content {
-  color: #666;
-  margin-bottom: 1rem;
+.card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+.card-title {
+  margin: 0;
+  font-weight: 600;
+}
+.card-text {
+  line-height: 1.6;
+}
+
+/* Vote Buttons */
+.like-btn, .dislike-btn {
+  font-weight: bold;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  transition: all 0.2s;
 }
 .like-btn {
-  color: green;
-  font-weight: bold;
+  background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+}
+.like-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
 }
 .dislike-btn {
-  color: red;
-  font-weight: bold;
+  background: linear-gradient(45deg, #dc3545, #fd7e14);
+  color: white;
 }
-.votes {
-  font-size: 1.1rem;
+.dislike-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* Comments */
+.comment-item {
+  border-left: 3px solid #007bff;
+  background: #f8f9fa;
+}
+.comments-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Modals & Forms */
+.modal-content {
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  .post-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Loading */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
 }

@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="{% load static %}{% static 'css/style.css' %}">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);">
         <div class="container">
-            <a class="navbar-brand" href="/">Blog API</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/api/posts/">API Posts</a>
-                <a class="nav-link" href="/api-auth/login/">Login</a>
+            <a class="navbar-brand fw-bold fs-3" href="/">
+                <i class="fas fa-blog me-2"></i>Blog Platform
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/admin/"><i class="fas fa-cogs me-1"></i>Admin</a>
+                <a class="nav-link" href="/api/posts/"><i class="fas fa-list me-1"></i>API</a>
+                <span class="navbar-text me-3" id="navbarUser" style="display: none; color: #fff;"></span>
             </div>
         </div>
     </nav>

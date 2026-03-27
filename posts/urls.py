@@ -8,6 +8,9 @@ from .views import (
 )
 
 urlpatterns = [
+    # Auth
+    path('signup/', SignupAPIView.as_view()),
+    
     # Posts
     path('posts/', PostListCreateView.as_view()),
     path('posts/<int:pk>/', PostDetailView.as_view()),

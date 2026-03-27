@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -23,7 +24,7 @@ class IsCommentAuthorOrReadOnly(permissions.BasePermission):
 
 # Post List + Create
 class PostListCreateView(generics.ListCreateAPIView):
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
@@ -81,3 +82,6 @@ class VoteToggleView(generics.CreateAPIView):
             vote.save()
 
         return Response({'message': 'Vote updated', 'vote': vote_type})
+
+def home(request):
+    return render(request, "blog_app/index.html")

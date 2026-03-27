@@ -11,9 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY
-SECRET_KEY = 'django-insecure-#fqq-yl0stghe_pnm&v%kujf5tm006dunxxjp@x+^w608lz*ao'
+from decouple import config
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-#fqq-yl0stghe_pnm&v%kujf5tm006dunxxjp@x+^w608lz*ao')
 
-DEBUG = False  # IMPORTANT for deployment
+DEBUG = True  # TEMP: Expose errors for Render fix
 
 ALLOWED_HOSTS = ['*']
 
@@ -99,7 +100,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # REST FRAMEWORK
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 }
 

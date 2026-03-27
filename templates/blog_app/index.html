@@ -1,45 +1,178 @@
 {% extends 'blog_app/base.html' %}
 
+{% block title %}Django Blog Full-Stack{% endblock %}
+
 {% block content %}
-<h1>Styled Blog Posts</h1>
-<div id="posts-container"></div>
-<button id="load-posts" class="btn btn-primary mb-3">Load Posts</button>
+<div class="row">
+  <div class="col-md-4">
+    <div id="login-section" class="card mb-4">
+      <div class="card-header">
+        <h5>Login (JWT)</h5>
+      </div>
+      <div class="card-body">
+        <input type="text" id="username" class="form-control mb-2" placeholder="Username">
+        <input type="password" id="password" class="form-control mb-2" placeholder="Password">
+        <button id="login-btn" class="btn btn-primary w-100">Login</button>
+        <div id="token-status" class="mt-2"></div>
+      </div>
+    </div>
+
+    <div id="create-section" class="card mb-4">
+      <div class="card-header">
+        <h5>Create Post</h5>
+      </div>
+      <div class="card-body">
+        <input type="text" id="post-title" class="form-control mb-2" placeholder="Title">
+        <textarea id="post-content" class="form-control mb-2" placeholder="Content" rows="3"></textarea>
+        <button id="create-post-btn" class="btn btn-success w-100" disabled>Create Post</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <button id="load-posts" class="btn btn-primary mb-3">Load Posts</button>
+    <div id="posts-container"></div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-async function loadPosts() {
-    try {
-        const res = await fetch('/api/posts/');
-        const posts = await res.json();
-        const container = document.getElementById('posts-container');
-        container.innerHTML = posts.results.map(post => `
-            <div class="post-card card">
-                <div class="card-body">
-                    <h5 class="post-title card-title">${post.title}</h5>
-                    <p class="post-content card-text">${post.content.substring(0, 200)}...</p>
-                    <p class="card-text"><small class="text-muted">By ${post.author.username} | Likes: <span class="likes">${post.likes_count}</span> | Dislikes: <span class="dislikes">${post.dislikes_count}</span></p>
-                    <button class="btn btn-success like-btn" onclick="vote(${post.id}, 1)">Like</button>
-                    <button class="btn btn-danger dislike-btn" onclick="vote(${post.id}, -1)">Dislike</button>
-                </div>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error(e);
-    }
-}
-document.getElementById('load-posts').onclick = loadPosts;
+let token = localStorage.getItem('access') || '';
 
-async function vote(postId, vote) {
-    // Get JWT token from localStorage or prompt
-    const token = localStorage.getItem('token') || prompt('Enter JWT token from /api/token/');
-    if (!token) return;
-    const res = await fetch(`/api/posts/${postId}/vote/`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
-        body: JSON.stringify({vote})
+function updateAuthStatus() {
+  const status = document.getElementById('token-status');
+  const createBtn = document.getElementById('create-post-btn');
+  if (token) {
+    status.innerHTML = '<small class="text-success">Authenticated ✓</small>';
+    createBtn.disabled = false;
+  } else {
+    status.innerHTML = '<small class="text-warning">Not logged in</small>';
+    createBtn.disabled = true;
+  }
+}
+
+async function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  try {
+    const res = await fetch('/api/token/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const data = await res.json();
+    if (res.ok) {
+      token = data.access;
+      localStorage.setItem('token', token);
+      updateAuthStatus();
+      alert('Login successful!');
+    } else {
+      alert('Login failed: ' + data.detail);
+    }
+  } catch (e) {
+    alert('Error: ' + e);
+  }
+}
+
+async function loadPosts() {
+  const headers = token ? {'Authorization': `Bearer ${token}`} : {};
+  try {
+    const res = await fetch('/api/posts/', {headers});
+    const data = await res.json();
+    const container = document.getElementById('posts-container');
+    container.innerHTML = data.map(post => `
+      <div class="card mb-3 post-card">
+        <div class="card-body">
+          <h5 class="card-title">${post.title}</h5>
+          <p class="card-text">${post.content.substring(0, 200)}${post.content.length > 200 ? '...' : ''}</p>
+          <p class="card-text"><small class="text-muted">
+            By ${post.author.username} | Likes: <span class="likes">${post.likes_count}</span> | 
+            Dislikes: <span class="dislikes">${post.dislikes_count}</span>
+          </small></p>
+          <div class="btn-group">
+            ${token ? `
+              <button class="btn btn-success btn-sm like-btn" onclick="vote(${post.id}, 1)">👍 ${post.likes_count}</button>
+              <button class="btn btn-danger btn-sm dislike-btn" onclick="vote(${post.id}, -1)">👎 ${post.dislikes_count}</button>
+              <button class="btn btn-warning btn-sm edit-btn" onclick="editPost(${post.id}, '${post.title.replace(/'/g, "\\'")}', '${post.content.replace(/'/g, "\\'")}')">Edit</button>
+              <button class="btn btn-danger btn-sm delete-btn" onclick="deletePost(${post.id})">Delete</button>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function createPost() {
+  const title = document.getElementById('post-title').value;
+  const content = document.getElementById('post-content').value;
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+  try {
+    const res = await fetch('/api/posts/', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({title, content})
+    });
+    if (res.ok) {
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-content').value = '';
+      loadPosts();
+    }
+  } catch (e) {
+    alert('Error creating post');
+  }
+}
+
+async function editPost(id, title, content) {
+  const newTitle = prompt('Edit title:', title);
+  const newContent = prompt('Edit content:', content);
+  if (newTitle && newContent) {
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    };
+    const res = await fetch(`/api/posts/${id}/`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({title: newTitle, content: newContent})
     });
     if (res.ok) loadPosts();
+  }
 }
+
+async function deletePost(id) {
+  if (confirm('Delete post?')) {
+    const headers = {'Authorization': `Bearer ${token}`};
+    const res = await fetch(`/api/posts/${id}/`, {method: 'DELETE', headers});
+    if (res.ok) loadPosts();
+  }
+}
+
+async function vote(postId, voteType) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+  const res = await fetch(`/api/posts/${postId}/vote/`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({vote: voteType})
+  });
+  if (res.ok) loadPosts();
+}
+
+// Event listeners
+document.getElementById('login-btn').onclick = login;
+document.getElementById('create-post-btn').onclick = createPost;
+document.getElementById('load-posts').onclick = loadPosts;
+
+// Initial check
+updateAuthStatus();
 </script>
 {% endblock %}

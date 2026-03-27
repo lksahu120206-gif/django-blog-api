@@ -1,7 +1,8 @@
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from rest_framework.response import Response
+from .models import Post, Comment, Vote
+from .serializers import PostSerializer, CommentSerializer, VoteSerializer
 
 
 # Post Permission
@@ -58,3 +59,25 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsCommentAuthorOrReadOnly]
+
+# Vote Toggle (like/dislike)
+class VoteToggleView(generics.CreateAPIView):
+    serializer_class = VoteSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs['post_id']
+        vote_type = int(request.data.get('vote'))
+        if vote_type not in [1, -1]:
+            return Response({'error': 'Vote must be 1 (like) or -1 (dislike)'}, status=400)
+
+        vote, created = Vote.objects.get_or_create(
+            post_id=post_id,
+            user=request.user,
+            defaults={'vote': vote_type}
+        )
+        if not created:
+            vote.vote = vote_type
+            vote.save()
+
+        return Response({'message': 'Vote updated', 'vote': vote_type})

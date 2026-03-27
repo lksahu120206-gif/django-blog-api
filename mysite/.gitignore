@@ -1,0 +1,44 @@
+# Virtual Environment
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Database
+db.sqlite3
+db.sqlite3-journal
+
+# Django logs and secret files
+*.log
+local_settings.py
+.env
+
+# Byte-compiled Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution
+build/
+dist/
+*.egg
+*.egg-info
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+.pycharm/
+
+# OS
+.DS_Store
+Thumbs.db

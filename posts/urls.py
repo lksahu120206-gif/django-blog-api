@@ -3,7 +3,8 @@ from .views import (
     PostListCreateView,
     PostDetailView,
     CommentListCreateView,
-    CommentDetailView
+    CommentDetailView,
+    VoteToggleView
 )
 
 urlpatterns = [
@@ -14,4 +15,6 @@ urlpatterns = [
     # Comments
     path('posts/<int:post_id>/comments/', CommentListCreateView.as_view()),
     path('comments/<int:pk>/', CommentDetailView.as_view()),
+    # Vote
+    path('posts/<int:post_id>/vote/', VoteToggleView.as_view()),
 ]

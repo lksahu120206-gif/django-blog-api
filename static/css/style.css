@@ -1,0 +1,27 @@
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.post-title {
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.post-content {
+  color: #666;
+  margin-bottom: 1rem;
+}
+.like-btn {
+  color: green;
+  font-weight: bold;
+}
+.dislike-btn {
+  color: red;
+  font-weight: bold;
+}
+.votes {
+  font-size: 1.1rem;
+}

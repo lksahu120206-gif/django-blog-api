@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('posts.urls')),
     path('api-auth/', include('rest_framework.urls')),  # login/logout
+    path('api/token/', include('rest_framework_simplejwt.urls')),
 ]

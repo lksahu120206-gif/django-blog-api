@@ -21,6 +21,9 @@ class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     dislikes_count = serializers.SerializerMethodField()
 
+    def perform_create(self, serializer):
+        serializer.save()
+
     class Meta:
         model = Post
         fields = '__all__'

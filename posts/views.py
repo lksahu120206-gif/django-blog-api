@@ -29,7 +29,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]#IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(author=None)
 
 
 # Post Detail

@@ -1,28 +1,24 @@
 from django.urls import path
-from django.http import JsonResponse
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView
+)
 from .views import (
     PostListCreateView,
     PostDetailView,
     CommentListCreateView,
     CommentDetailView,
     VoteToggleView,
-    signup,
     SignupAPIView
 )
 
-# ✅ TEST ROUTE
-def test(request):
-    return JsonResponse({"status": "API WORKING"})
-def posts(request):
-    return JsonResponse({"posts": ["Post 1", "Post 2"]})
 urlpatterns = [
-    # 🔥 TEST
-    path('test/', test, name='test'),
-
-    # 🔥 AUTH
-    path('signup/', signup, name='signup'),
-    path('auth/signup/', SignupAPIView.as_view(), name='auth-signup'),
+    # AUTH - SimpleJWT
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('signup/', SignupAPIView.as_view(), name='signup'),
 
     # POSTS
     path('posts/', PostListCreateView.as_view(), name='post-list'),

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from posts.views import home
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+# removed duplicate token views - now in posts.urls
 from django.http import JsonResponse
 
 urlpatterns = [
@@ -28,6 +28,5 @@ urlpatterns = [
     path('api/debug/', lambda request: JsonResponse({"status": "PROJECT WORKING", "posts_app_loaded": True})),
     path('api/', include('posts.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # token routes now in posts.urls via api/
 ]

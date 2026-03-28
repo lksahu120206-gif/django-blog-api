@@ -1,12 +1,21 @@
-# Fix React Axios and Django Trailing Slash Issues ✅
+# React Axios BaseURL & Django Trailing Slash Fixes ✅
 
-## Steps:
-- [x] 1. Update `frontend/src/services/api.js`: Add `/signup/` to response interceptor bypass list
-- [x] 2. Update `blog_app/settings.py`: Add `APPEND_SLASH = False` at bottom
-- [x] 3. Add `TODO.md` to `.gitignore`
-- [ ] 4. Test locally: Backend `python manage.py runserver`, Frontend `cd frontend && npm run dev`
-- [ ] 5. Verify signup handles errors without redirect, test posts/login
-- [ ] 6. Deploy and test on production
+## Changes Made:
+- [x] api.js: Root baseURL + /signup/ bypass + comments
+- [x] All components: Prepended 'api/' to endpoints (AuthContext, Home, PostDetail, CreatePost, PostCard)
+- [x] settings.py: APPEND_SLASH = False
+- [x] .gitignore: Added TODO.md
+- requirements.txt: Already has python-decouple
 
-**All code fixes applied successfully!**
+## Test:
+- Backend: `python manage.py runserver`
+- Frontend: `cd frontend && npm run dev`
+- Verify signup errors no redirect, all API calls work
+
+## Deploy:
+git add .
+git commit -m "fix: axios root base + explicit api paths + append_slash=False"
+git push
+
+Ready!
 

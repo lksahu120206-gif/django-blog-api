@@ -17,13 +17,11 @@ class VoteSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     #author = serializers.CharField(source='author.username', read_only=True)
     author = serializers.ReadOnlyField(source='author.username')
-    comments = CommentSerializer(many=True, read_only=True)
-    likes_count = serializers.SerializerMethodField()
-    dislikes_count = serializers.SerializerMethodField()
+    #comments = CommentSerializer(many=True, read_only=True)
+    #likes_count = serializers.SerializerMethodField()
+    #dislikes_count = serializers.SerializerMethodField()
 
-    def perform_create(self, serializer):
-        serializer.save()
-
+    
     class Meta:
         model = Post
         fields = '__all__'

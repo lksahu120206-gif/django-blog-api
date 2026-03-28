@@ -1,1 +1,1 @@
-web: gunicorn blog_app.wsgi --log-file -
+web: python manage.py migrate && gunicorn blog_app.wsgi:application --bind 0.0.0.0:$PORT

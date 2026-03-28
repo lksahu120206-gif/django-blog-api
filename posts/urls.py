@@ -14,7 +14,8 @@ from .views import (
 # ✅ TEST ROUTE
 def test(request):
     return JsonResponse({"status": "API WORKING"})
-
+def posts(request):
+    return JsonResponse({"posts": ["Post 1", "Post 2"]})
 urlpatterns = [
     # 🔥 TEST
     path('test/', test, name='test'),

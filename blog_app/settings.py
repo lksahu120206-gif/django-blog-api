@@ -12,11 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 from decouple import config
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-#fqq-yl0stghe_pnm&v%kujf5tm006dunxxjp@x+^w608lz*ao')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key-only')
 
-DEBUG = False  # Production ready
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*','django-blog-api-q037.onrender.com']
+ALLOWED_HOSTS = ['django-blog-api-q037.onrender.com']
 
 
 # APPLICATIONS
@@ -111,7 +111,17 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # CORS
-CORS_ALLOW_ALL_ORIGINS = True
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',          # MUST be first
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',      # right after SecurityMiddleware
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
 
 # REST FRAMEWORK

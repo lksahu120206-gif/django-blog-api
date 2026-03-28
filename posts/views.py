@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from rest_framework import generics, permissions
-from rest_framework.permissions import IsAuthenticatedOrReadOnly,AllowAny
+from django.contrib.auth.models import User
+from rest_framework import generics, permissions, status
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from .models import Post, Comment, Vote
-from .serializers import PostSerializer, CommentSerializer, VoteSerializer
+from .serializers import PostSerializer, CommentSerializer, VoteSerializer, SignupSerializer
 
 
 # Post Permission
@@ -26,10 +29,10 @@ class IsCommentAuthorOrReadOnly(permissions.BasePermission):
 class PostListCreateView(generics.ListCreateAPIView):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
-    permission_classes = [AllowAny]#IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]  # ✅ Read=public, Write=auth required
 
     def perform_create(self, serializer):
-        serializer.save(author=None)
+        serializer.save(author=self.request.user)  # ✅ Save actual logged-in user
 
 
 # Post Detail
@@ -61,6 +64,7 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsCommentAuthorOrReadOnly]
 
+
 # Vote Toggle (like/dislike)
 class VoteToggleView(generics.CreateAPIView):
     serializer_class = VoteSerializer
@@ -83,16 +87,13 @@ class VoteToggleView(generics.CreateAPIView):
 
         return Response({'message': 'Vote updated', 'vote': vote_type})
 
+
+# Home
 def home(request):
     return render(request, "blog_app/index.html")
 
 
-from django.contrib.auth.models import User
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-
-
+# Simple Signup (function-based) - you can remove this if using SignupAPIView
 @api_view(['POST'])
 def signup(request):
     username = request.data.get("username")
@@ -105,18 +106,15 @@ def signup(request):
     if User.objects.filter(username=username).exists():
         return Response({"error": "User already exists"}, status=400)
 
-    user = User.objects.create_user(
+    User.objects.create_user(
         username=username,
         email=email,
         password=password
     )
-
     return Response({"message": "User created successfully"}, status=201)
 
 
-from rest_framework.views import APIView
-from .serializers import SignupSerializer
-
+# Class-based Signup (preferred)
 class SignupAPIView(APIView):
     def post(self, request):
         serializer = SignupSerializer(data=request.data)

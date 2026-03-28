@@ -15,11 +15,19 @@ class VoteSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    #author = serializers.CharField(source='author.username', read_only=True)
     author = serializers.ReadOnlyField(source='author.username')
-    #comments = CommentSerializer(many=True, read_only=True)
-    #likes_count = serializers.SerializerMethodField()
-    #dislikes_count = serializers.SerializerMethodField()
+    likes_count = serializers.SerializerMethodField()
+    dislikes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'content', 'author', 'created_at', 'likes_count', 'dislikes_count']
+
+    def get_likes_count(self, obj):
+        return obj.votes.filter(vote=1).count()
+
+    def get_dislikes_count(self, obj):
+        return obj.votes.filter(vote=-1).count()
 
     
     class Meta:
